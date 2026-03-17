@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => 
+        {
+            renderMathInElement(document.body);
+        });
+    </script>
+    <style>
+        * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+        body{
+            justify-content: center;
+            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: rgb(0, 196, 198);
+            height: 100vh;
+            position: relative;
+            display: flex;
+            justify-content: center; /* Centra orizzontalmente */
+            align-items: center;
+        }
+        .container{
+            position: relative;
+            width: 90%;
+            max-width: 1200px;
+            height: 90vh;
+            border-radius: 20px;
+            display: flex;
+            overflow: hidden;
+            flex-direction: column;
+        }
+        .slide{
+            position: relative;
+            border-radius: 20px;
+            padding-top: 30px;
+            background: linear-gradient(to right, rgb(22, 41, 99), rgb(0, 196, 198));
+            display: none;
+            overflow-y: auto;
+            width: 100%;
+            height: 100%;
+        }
+        .slide.active{
+        display: flex; 
+        flex-direction: column;
+        animation: myAnimation 0.8s cubic-bezier(0.6, 0, 0.2, 1);
+        }
+        @keyframes myAnimation {
+            from{
+                opacity: 0; 
+                transform: translateY(20px) scale(0.98);
+            }
+            to{
+                opacity: 1; 
+                transform: translateY(0) scale(1);
+            }
+        }
+        #fullscreen-btn{
+            font-size: larger;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            position: absolute; right:10px;bottom: 10px; z-index: 2; 
+            border: 0cm;
+            background: rgba(0, 0, 0, 0);
+        }
+        
+        .long{
+            
+            border-radius: 20px;
+            padding: 3px;
+            background-color: rgb(3, 11, 60);
+            width: 80%;
+            height: auto;
+            overflow-wrap: break-word;
+            word-break: keep-all;
+            margin-left: 10%;
+            margin-right: 10%;
+
+        }
+        strong{
+            font-weight: bold;
+            color:rgb(89, 126, 190);
+        }
+        .column{
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: row; 
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+        }
+        .col{
+            height: 80%;
+            border-radius: 20px;
+            background-color: rgb(3, 11, 60);
+            width: 44%;
+            margin: 3% ;
+        }
+        h1{
+            display: block;
+            font-size: 36px;/* aggiungi clamp*/
+            color:rgb(12, 25, 79) ;
+            margin-bottom: 15px;
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="slide active" >
+            <h1>INTRODUZIONE</h1>
+            <div class="long">
+                <strong>ciaooo</strong> mondoooooo
+            </div>
+
+        </div>
+        <div class="slide" >
+            <h1>la nostra experience</h1>
+            <div class="column">
+            <div class="col">
+                ciaoooo
+            </div>
+            <div class="col">
+                ciaooooo
+            </div>
+            </div>
+        </div>
+
+        <div class="slide" >
+            ciaooo mondo3
+
+        </div>
+        <button id="fullscreen-btn" onclick="toggleFullscreen()">⛶</button>
+
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+         function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[n].classList.add('active');
+        }
+         function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+            showSlide(currentSlide);
+        }
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+
+        showSlide(0);
+    </script>
+    <script>
+  function toggleFullscreen() {
+    const btn = document.getElementById('fullscreen-btn');
+
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+      btn.textContent = '⊹';
+    } else {
+      document.exitFullscreen();
+      btn.textContent = '⛶';
+    }
+    document.addEventListener('fullscreenchange', () => {
+  const btn = document.getElementById('fullscreen-btn');
+  if (!document.fullscreenElement) {
+    btn.textContent = '⛶ ';
+  } else {
+    btn.textContent = '⊹ ';
+  }
+ });
+  }
+</script>
+</body>
+</html> 
