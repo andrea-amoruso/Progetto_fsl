@@ -1,195 +1,579 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>L'Elettronica Nascosta</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-
     <script>
-        document.addEventListener("DOMContentLoaded", () => 
-        {
+        document.addEventListener("DOMContentLoaded", () => {
             renderMathInElement(document.body);
         });
     </script>
     <style>
         * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-        body{
-            justify-content: center;
-            text-align: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: rgb(0, 196, 198);
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ── PALETTE ─────────────────────────────────────────────────── */
+        :root {
+            --bg: #060C28;
+            /* sfondo pagina */
+            --panel: #020B3A;
+            /* card / h1 / .long / .col */
+            --slide-from: #152560;
+            /* gradiente slide sinistra */
+            --slide-to: #0AABBB;
+            /* gradiente slide destra */
+            --accent: #00E5FF;
+            /* accento principale */
+            --accent-70: rgba(0, 229, 255, 0.70);
+            /* h2 */
+            --accent-50: rgba(0, 229, 255, 0.50);
+            /* pallini, glow forte */
+            --accent-30: rgba(0, 229, 255, 0.30);
+            /* box-shadow medio */
+            --accent-15: rgba(0, 229, 255, 0.15);
+            /* box-shadow leggero */
+            --text: #C3D9F7;
+            /* testo corpo */
+            --text-dim: rgba(195, 217, 247, 0.40);
+            /* testo secondario */
+            /* Formule: unico posto con colori diversi */
+            --formula-bg: #00FFB2;
+            --formula-fg: #001ECC;
+        }
+
+        /* ── BODY ────────────────────────────────────────────────────── */
+        body {
+            width: 100vw;
             height: 100vh;
-            position: relative;
-            display: flex;
-            justify-content: center; /* Centra orizzontalmente */
-            align-items: center;
-        }
-        .container{
-            position: relative;
-            width: 90%;
-            max-width: 1200px;
-            height: 90vh;
-            border-radius: 20px;
-            display: flex;
             overflow: hidden;
-            flex-direction: column;
+            background: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text);
         }
-        .slide{
-            position: relative;
-            border-radius: 20px;
-            padding-top: 30px;
-            background: linear-gradient(to right, rgb(22, 41, 99), rgb(0, 196, 198));
+
+        /* ── CANVAS ──────────────────────────────────────────────────── */
+        .container {
+            position: absolute;
+            width: 1280px;
+            height: 720px;
+            transform: scale(var(--scale, 1));
+            transform-origin: center center;
+            overflow: hidden;
+        }
+
+        /* ── SLIDE ───────────────────────────────────────────────────── */
+        .slide {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, var(--slide-from), var(--slide-to));
             display: none;
-            overflow-y: auto;
-            width: 100%;
-            height: 100%;
+            overflow: hidden;
         }
-        .slide.active{
-        display: flex; 
-        flex-direction: column;
-        animation: myAnimation 0.8s cubic-bezier(0.6, 0, 0.2, 1);
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: slideIn 0.7s cubic-bezier(0.6, 0, 0.2, 1);
         }
-        @keyframes myAnimation {
-            from{
-                opacity: 0; 
-                transform: translateY(20px) scale(0.98);
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px) scale(0.98);
             }
-            to{
-                opacity: 1; 
+
+            to {
+                opacity: 1;
                 transform: translateY(0) scale(1);
             }
         }
-        #fullscreen-btn{
-            font-size: larger;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            position: absolute; right:10px;bottom: 10px; z-index: 2; 
-            border: 0cm;
-            background: rgba(0, 0, 0, 0);
-        }
-        
-        .long{
-            
-            border-radius: 20px;
-            padding: 3px;
-            background-color: rgb(3, 11, 60);
-            width: 80%;
-            height: auto;
-            overflow-wrap: break-word;
-            word-break: keep-all;
-            margin-left: 10%;
-            margin-right: 10%;
 
+        /* ── TIPOGRAFIA ──────────────────────────────────────────────── */
+        h1 {
+            box-shadow: 0px 3px 8px 0px var(--accent-50);
+            font-family: 'Space Mono', monospace;
+            background-color: var(--panel);
+            width: 100%;
+            min-height: 65px;
+            padding: 10px 16px;
+            font-size: 60px;
+            color: var(--accent);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 0 20px var(--accent-70);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 18px;
         }
-        strong{
-            font-weight: bold;
-            color:rgb(89, 126, 190);
+
+        h2 {
+            color: var(--accent-70);
+            font-size: 24px;
+            margin-bottom: 10px;
         }
-        .column{
+
+        /* ── COMPONENTI ──────────────────────────────────────────────── */
+        .long {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            font-size: 17px;
+            box-shadow: 0 0 28px var(--accent-30);
+            border-radius: 20px;
+            background-color: var(--panel);
+            width: 80%;
+            padding: 12px 16px;
+            text-align: justify;
+            overflow-wrap: break-word;
+        }
+
+        .column {
+            width: 100%;
             flex: 1;
             min-height: 0;
             display: flex;
-            flex-direction: row; 
-            flex-wrap: nowrap;
+            flex-direction: row;
             justify-content: center;
-            align-items: center;
-        }
-        .col{
-            height: 80%;
-            border-radius: 20px;
-            background-color: rgb(3, 11, 60);
-            width: 44%;
-            margin: 3% ;
-        }
-        h1{
-            display: block;
-            font-size: 36px;/* aggiungi clamp*/
-            color:rgb(12, 25, 79) ;
-            margin-bottom: 15px;
-            margin-top: 10px;
+            align-items: stretch;
         }
 
+        .col {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 0 28px var(--accent-30);
+            border-radius: 20px;
+            background-color: var(--panel);
+            width: 40%;
+            margin: 24px;
+            padding: 20px;
+            text-align: justify;
+            font-size: 16px;
+        }
+
+        .littlecont {
+            display: flex;
+            width: 100%;
+            flex: 1;
+            min-height: 0;
+            padding: 10px 40px;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: stretch;
+            overflow: hidden;
+        }
+
+        .card {
+            box-shadow: 0 0 16px var(--accent-15);
+            background-color: rgba(2, 11, 58, 0.40);
+            padding: 15px;
+            width: 30%;
+            border-radius: 20px;
+            font-size: 16px;
+        }
+
+        .wrap {
+            width: 100%;
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .formula {
+            box-shadow: 0 0 28px var(--accent-30);
+            width: 80%;
+            background-color: var(--formula-bg);
+            color: var(--formula-fg);
+            font-weight: bolder;
+            font-size: 28px;
+            border-radius: 20px;
+            padding: 10px;
+        }
+
+        .upper {
+            font-size: 14px;
+            display: inline-block;
+            position: relative;
+            top: -22px;
+            left: 10px;
+            background-color: var(--formula-fg);
+            color: var(--formula-bg);
+            border-radius: 20px;
+            padding: 2px 20px;
+        }
+
+        .pallino {
+            background-color: var(--accent-50);
+            min-width: 12px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+            box-shadow: 0 0 16px var(--accent-50);
+            flex-shrink: 0;
+        }
+
+        .elenco {
+            box-shadow: 0 0 12px var(--accent-15);
+        }
+
+        /* ── FULLSCREEN BTN ──────────────────────────────────────────── */
+        #fullscreen-btn {
+            font-size: 18px;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            z-index: 10;
+            border: none;
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--accent);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ── CONTATORE SLIDE ─────────────────────────────────────────── */
+        #slide-counter {
+            display: none;
+            position: absolute;
+            bottom: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 13px;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            pointer-events: none;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <div class="slide active" >
+
+        <!-- SLIDE 0: Titolo -->
+        <div class="slide active">
+            <div
+                style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;">
+                <div
+                    style="font-size:88px;color:var(--accent);text-shadow:0 0 30px var(--accent-50);text-align:center;line-height:1.1;">
+                    L'ELETTRONICA NASCOSTA</div>
+                <div style="font-size:48px;color:var(--text);text-shadow:0 0 20px var(--accent-30);">Classe 4F del Liceo
+                    F. Severi</div>
+            </div>
+        </div>
+
+        <!-- SLIDE 1: Introduzione -->
+        <div class="slide">
             <h1>INTRODUZIONE</h1>
-            <div class="long">
-                <strong>ciaooo</strong> mondoooooo
+            <div class="long" style="justify-content:center;text-align:center; font-size: 25px;">
+                Un'esperienza unica e coinvolgente, che fra teoria e pratica ci ha portato alla scoperta del magico
+                mondo dell'elettronica
             </div>
-
         </div>
-        <div class="slide" >
-            <h1>la nostra experience</h1>
+
+        <!-- SLIDE 2: Lezioni introduttive -->
+        <div class="slide">
+            <h1>Le lezioni introduttive: dalla teoria alla comprensione</h1>
+            <div class="long" style="margin-bottom:20px;">
+                Le lezioni iniziali hanno rappresentato una fase fondamentale del percorso, in quanto ci hanno
+                fornito le basi teoriche necessarie per comprendere e affrontare le attività svolte successivamente
+                nei laboratori universitari. Nonostante gli argomenti fossero inizialmente nuovi, sono stati
+                presentati in modo chiaro e coinvolgente.
+            </div>
+            <div class="littlecont">
+                <div class="card" style="display:flex;flex-direction:column;align-items:center;">
+                    <h2>Tensione</h2>
+                    <p>Volt [V]</p>
+                    <p style="font-size:230px;line-height:1.1;color:var(--text);">V</p>
+                </div>
+                <div class="card" style="display:flex;flex-direction:column;align-items:center;">
+                    <h2>Corrente</h2>
+                    <p>Ampere [A]</p>
+                    <p style="font-size:230px;line-height:1.1;color:var(--text);">I</p>
+                </div>
+                <div class="card" style="display:flex;flex-direction:column;align-items:center;">
+                    <h2>Resistenza</h2>
+                    <p>Ohm [Ω]</p>
+                    <p style="font-size:230px;line-height:1.1;color:var(--text);">R</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: Formule -->
+        <div class="slide">
+            <h1>Cosa abbiamo scoperto</h1>
             <div class="column">
-            <div class="col">
-                ciaoooo
-            </div>
-            <div class="col">
-                ciaooooo
-            </div>
+                <div class="col">
+                    <h2>La legge di Coulomb</h2>
+                    <div class="wrap">
+                        <div class="formula">
+                            <div class="upper">FORMULA</div>
+                            \[\boldsymbol{F = k \dfrac{q_1\cdot q_2}{r^2}}\]
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <h2>La legge di Ohm</h2>
+                    <div class="wrap">
+                        <div class="formula">
+                            <div class="upper">FORMULA</div>
+                            \[\boldsymbol{V=I \cdot R}\]
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="slide" >
-            ciaooo mondo3
+        <!-- SLIDE 4: Camera anecoica -->
+        <div class="slide">
+            <h1>Camera anecoica e assorbimento delle onde elettromagnetiche</h1>
+            <div class="long" style="margin-bottom:14px;">
+                Una camera anecoica è un ambiente schermato e rivestito di materiali assorbenti,
+                progettato per eliminare ogni riflessione di onde e interferenze esterne. Il termine,
+                dal greco an-echo (senza eco), ne descrive perfettamente la funzione.
+            </div>
+            <div class="column">
+                <div class="col" style="width: 50%; align-items: center;justify-content: center;">
+                    <img src="https://i.ibb.co/fVHHxvwV/Whats-App-Image-2026-03-22-at-15-00-07.jpg"
+                        alt="Whats App Image 2026 03 22 at 15 00 07" style=" width: 470px;height: 400px;">
 
+                </div>
+                <div class="col"
+                    style="background:transparent;box-shadow:none;justify-content:space-between;gap:10px; padding-top: 0; padding-bottom: 0; width: 40%;">
+                    <div class="long"
+                        style="width:100%;justify-content:center;margin:0; padding: 2px 2px; margin: 3px;">
+                        <h2 style="font-size: 30px; margin: 0;">La struttura</h2>
+                    </div>
+                    <div class="long elenco" style="width:100%;margin:0;">
+                        <div class="pallino"></div>Gabbia di Faraday
+                    </div>
+                    <div class="long elenco" style="width:100%;margin:0;">
+                        <div class="pallino"></div>Disaccoppiamento meccanico
+                    </div>
+                    <div class="long elenco" style="width:100%;margin:0;">
+                        <div class="pallino"></div>Griglia dielettrica
+                    </div>
+                    <div class="long elenco" style="width:100%;margin:0;">
+                        <div class="pallino"></div>Posizionatore azimutale
+                    </div>
+                    <div class="long elenco" style="width:100%;margin:0;">
+                        <div class="pallino"></div>RAM (Radiation Absorbent Materials)
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- SLIDE 5: Misure elettriche -->
+        <div class="slide">
+            <h1>Misure Elettriche e Percezione Acustica</h1>
+            <div class="long" style="margin-bottom:14px;">
+                L'attività si è articolata in due fasi: metrologia elettrica di base ed esplorazione della
+                risposta in frequenza dell'orecchio e dell'occhio umano.
+            </div>
+            <div class="column">
+                <div class="col" style="width: 45%;">
+                    <h2 style="margin: 0;">Metrologia</h2>
+                    <div style="font-size:15px;line-height:1.6;margin-top:8px;">
+                        Abbiamo impiegato un multimetro digitale per misurare i parametri elettrici, una
+                        batteria come sorgente e un resistore come carico. Il focus non è stato solo il
+                        valore sul display, ma anche il calcolo dell'incertezza della misura: ogni misura
+                        è influenzata dalla risoluzione dello strumento, dalla classe di precisione e
+                        dalle condizioni ambientali.
+                    </div>
+                    <div
+                        style="width: 100%;display: flex;align-items: center; justify-content: center; overflow-y: hidden;">
+                        <img src="https://i.ibb.co/BVdjCPr5/Whats-App-Image-2026-03-17-at-19-15-52.jpg"
+                            alt="Whats App Image 2026 03 17 at 19 15 52"
+                            style="height:400px; position: relative;bottom: -20px;">
+                    </div>
+
+                </div>
+                <div class="col" style="width: 45%;">
+                    <h2 style="margin: 0;">Fase esplorativa</h2>
+                    <div style="font-size:15px;line-height:1.6;margin-top:8px;">
+                        Usando un generatore di funzioni e un oscilloscopio Tektronix, abbiamo inviato
+                        segnali sinusoidali a diverse frequenze verso un paio di cuffie. Collegando anche
+                        un LED, abbiamo osservato che aumentando la frequenza lampeggiava così velocemente
+                        da diventare impercettibile all'occhio umano. <br>
+                        <div style="height: 15px;"></div>
+                    </div>
+                    <div
+                        style="width: 100%;display: flex;align-items: center; justify-content: center; overflow-y: hidden;">
+                        <img src="https://i.ibb.co/bgQc9d1Y/Whats-App-Image-2026-03-17-at-19-15-52-1.jpg"
+                            alt="Whats App Image 2026 03 17 at 19 15 52 (1)"
+                            style="height:400px; position: relative;bottom: 10px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide">
+            <h1> Alla scoperta dei circuiti</h1>
+
+            <div class="long">Durante il nostro percorso in questo FSL, abbiamo avuto la possibilità di realizzare un
+                sintetizzatore vocale, cioè un meccanismo elettronico con cui emettere un suono (come fa una pianola).
+                Ci siamo serviti di un generatore di tensione elettrica, collegato a un PC, un altoparlante, un
+                resistore, un condensatore, un induttore, una breadboard e diversi cavetti; inoltre, sul pc, attraverso
+                un software, siamo riusciti a visualizzare le onde elettroniche, regolando anche tensione e . . . <br>
+                Collegando con i cavetti tutti gli oggetti citati prima, seguendo un preciso ordine, siamo riusciti a
+                dare vita all'altoparlante, realizzando un vero e proprio circuito elettrico perfettamente funzionante.
+            </div>
+            <div class="column">
+                <div class="col"
+                    style=" width: 50%;background-color: transparent; box-shadow: none; border-radius: 0;align-items: center; padding: 0;">
+                    <img src="https://i.ibb.co/pBWW4vtp/Whats-App-Image-2026-03-17-at-19-15-53.jpg"
+                        alt="Whats App Image 2026 03 17 at 19 15 53"
+                        style="width: 100%;position: relative; bottom: 300px;">
+                </div>
+                <div class="col"
+                    style="width: 50%; background-color: transparent; box-shadow: none; border-radius: 0; align-items: center; padding: 0;">
+                    <img src="https://i.ibb.co/MkMnTCYx/image.png" alt="image" style="width: 105%;">
+                </div>
+            </div>
+        </div>
+        <div class="slide">
+            <h1>LABORATORIO SULLE FIBRE OTTICHE</h1>
+            <div class="long">Durante la nostra visita all’università di ingegneria elettronica abbiamo avuto
+                l’opportunità di osservare da vicino le fibre ottiche e comprenderne il funzionamento. In particolare,
+                ci è stato mostrato come intervenire quando una fibra si spezza: attraverso un apposito macchinario,
+                chiamato giuntatrice, è possibile riallineare con estrema precisione le estremità e unirle nuovamente.
+                Questa esperienza ci ha permesso di capire quanto sia delicata ma allo stesso tempo fondamentale questa
+                tecnologia.</div>
+            <div class="column">
+                <div class="col" style=" width: 50%;background-color: transparent; box-shadow: none; border-radius: 0;">
+                    <div>
+                        <img src="https://i.ibb.co/qYwTdkPd/Whats-App-Image-2026-03-17-at-13-30-19.jpg"
+                            alt="Whats App Image 2026 03 17 at 13 30 19"
+                            style="width: 95%; position: relative; bottom: 180px;">
+                    </div>
+                </div>
+                <div class="col"
+                    style="width: 50%; background-color: transparent; box-shadow: none; border-radius: 0; align-items: center; padding: 0;">
+                    <iframe
+                        src="https://www.youtube.com/embed/mgFFLK1-VBk?mute=1&autoplay=1&loop=1&playlist=mgFFLK1-VBk"
+                        frameborder="0" style="width: 100%; flex: 1; min-height: 0; aspect-ratio: 9/16;"
+                        allow="autoplay; encrypted-media" allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </div>
+        <div class="slide">
+            <h1>il nostro progetto</h1>
+            <div class="long">La nostra curiosità ci ha spinto oltre, fino a creare un progetto tutto nostro. Ciò ci ha permesso di avere maggiore consapevolezza delle competenze acquisite e di metterci alla prova nell'fronteggiare le difficoltà che abbiamo trovato lungo il percorso. Siamo quindi riusciti a creare una porta che si apre e si chiude con l'utilizzo di due bottoni</div>
+            <iframe src="https://www.youtube.com/embed/zpxxN9bs1fY?mute=1" frameborder="0"
+                style="width: 80%; flex: 1; min-height: 0; aspect-ratio: 9/16; margin-bottom: 15px; margin-top: 10px;" allow="autoplay; encrypted-media"
+                allowfullscreen>
+            </iframe>
+        </div>
+        
+        <div class="slide">
+            <div style="height: 80px;width: 100%; background-color: var(--panel);  position: absolute; top: 0px;"></div>
+            <div
+                style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;">
+                
+                <div
+                    style="font-size:88px;color:var(--accent);text-shadow:0 0 30px var(--accent-50);text-align:center;line-height:1.1;">
+                    GRAZIE DELLA GENTILE ATTENZIONE
+                </div>
+                
+            </div>
+            <div style="height: 80px; width: 100%;background-color: var(--panel); position: absolute; bottom: 0px;"></div>
+        </div>
+
+        <!-- Bottone fullscreen -->
         <button id="fullscreen-btn" onclick="toggleFullscreen()">⛶</button>
+        <div id="slide-counter">1 / 6</div>
 
-    </div>
+    </div><!-- /container -->
 
     <script>
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
-        const totalSlides = slides.length;
+        // ── SCALING CORRETTO ─────────────────────────────────────────────
+        // ✅ Le dimensioni qui DEVONO essere identiche a quelle nel CSS (.container)
+        const CANVAS_W = 1280;
+        const CANVAS_H = 720;
 
-         function showSlide(n) {
-            slides.forEach(slide => slide.classList.remove('active'));
+        function resize() {
+            const scaleX = window.innerWidth / CANVAS_W;
+            const scaleY = window.innerHeight / CANVAS_H;
+            // Math.min → letterbox: una dimensione tocca sempre il bordo
+            const scale = Math.min(scaleX, scaleY);
+            document.documentElement.style.setProperty('--scale', scale);
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // ── NAVIGAZIONE ──────────────────────────────────────────────────
+        let current = 0;
+        const slides = document.querySelectorAll('.slide');
+        const total = slides.length;
+        const counter = document.getElementById('slide-counter');
+
+        function showSlide(n) {
+            slides.forEach(s => s.classList.remove('active'));
             slides[n].classList.add('active');
+            counter.textContent = `${n + 1} / ${total}`;
         }
-         function changeSlide(direction) {
-            currentSlide += direction;
-            if (currentSlide < 0) currentSlide = 0;
-            if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
-            showSlide(currentSlide);
+
+        function changeSlide(dir) {
+            current = Math.max(0, Math.min(total - 1, current + dir));
+            showSlide(current);
         }
-          document.addEventListener('keydown', (e) => {
+
+        document.addEventListener('click', e => {
+            if (e.target.closest('#fullscreen-btn')) return;
+            changeSlide(e.clientX < window.innerWidth / 2 ? -1 : 1);
+        });
+
+        document.addEventListener('keydown', e => {
             if (e.key === 'ArrowLeft') changeSlide(-1);
             if (e.key === 'ArrowRight') changeSlide(1);
         });
 
-        showSlide(0);
-    </script>
-    <script>
-  function toggleFullscreen() {
-    const btn = document.getElementById('fullscreen-btn');
+        let touchX = null;
+        document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
+        document.addEventListener('touchend', e => {
+            if (touchX === null) return;
+            const dx = e.changedTouches[0].clientX - touchX;
+            if (Math.abs(dx) > 50) changeSlide(dx < 0 ? 1 : -1);
+            touchX = null;
+        });
 
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-      btn.textContent = '⊹';
-    } else {
-      document.exitFullscreen();
-      btn.textContent = '⛶';
-    }
-    document.addEventListener('fullscreenchange', () => {
-  const btn = document.getElementById('fullscreen-btn');
-  if (!document.fullscreenElement) {
-    btn.textContent = '⛶ ';
-  } else {
-    btn.textContent = '⊹ ';
-  }
- });
-  }
-</script>
+        showSlide(0);
+
+        // ── FULLSCREEN ───────────────────────────────────────────────────
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        document.addEventListener('fullscreenchange', () => {
+            document.getElementById('fullscreen-btn').textContent =
+                document.fullscreenElement ? '⊹' : '⛶';
+        });
+    </script>
 </body>
-</html> 
+
+</html>
