@@ -513,14 +513,12 @@
         const CANVAS_H = 720;
 
         function resize() {
-            const scaleX = window.innerWidth / CANVAS_W;
-            const scaleY = window.innerHeight / CANVAS_H;
-            // Math.min → letterbox: una dimensione tocca sempre il bordo
-            const scale = Math.min(scaleX, scaleY);
+            const vw = window.visualViewport ? window.visualViewport.width : window.innerWidth;
+            const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+            const scale = Math.min(vw / CANVAS_W, vh / CANVAS_H);
             document.documentElement.style.setProperty('--scale', scale);
         }
         window.addEventListener('resize', resize);
-        resize();
 
         // ── NAVIGAZIONE ──────────────────────────────────────────────────
         let current = 0;
